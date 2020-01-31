@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "declaration": true,
+    "sourceMap": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "target": "es6",
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "removeComments": true,
+    "downlevelIteration": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmitOnError": true,
+    "pretty": true,
+    "checkJs": false, // type check js files
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true, // importing helper functions from tslib
+    "noEmitHelpers": true, // disable emitting inline helper functions
+    "lib": ["scripthost", "es2015", "es2016", "es2017", "esnext", "dom"]
+  },
+  "include": ["src", "./index.ts"],
+  "exclude": ["./src/**/*.spec.*", "node_modules", "examples"],
+  "compileOnSave": false
+}

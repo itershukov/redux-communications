@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "allowJs": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "es5",
+    "noStrictGenericChecks": true,
+    "lib": ["dom", "dom.iterable", "scripthost", "es2015", "es2016", "es2017", "esnext"],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "downlevelIteration": true,
+    "baseUrl": "src"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
