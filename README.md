@@ -243,8 +243,8 @@ Inits strategy with passed configuration. Available fields
 - collectionApiProviders: APIProvider[](required) - array of APIProviders connected to collection store branch
 - modelInitialState: StoreBranch (optional) - initial state for model branch
 - collectionInitialState: StoreBranch (optional) - initial state for collection branch
-- transport: ICRUDTransport (optional) - transport that can be used to automatically generation of API providers 
-- branches: Branch[] (optional) - array ob Branches that can be user to extend base behaviour ot CRUD strategy
+- transport: ICRUDTransport (optional) - transport that can be used to automatically generate API providers
+- branches: Branch[](optional) - array of Branches that can be used to extend base behaviour of CRUD strategy
 
 ### SimpleStrategy
 
@@ -259,7 +259,7 @@ Inits strategy with passed configuration. Available fields
 
 - apiProvider: APIProvider[](required) - array of APIProviders connected to model store branch
 - initialState: StoreBranch (optional) - initial state for model branch
-- branches: Branch[] (optional) - array of Branches that can be user to extend base behaviour ot CRUD strategy
+- branches: Branch[](optional) - array of Branches that can be user to extend base behaviour ot CRUD strategy
 
 ## Class Helpers
 
@@ -272,7 +272,7 @@ This class contains provider for your API logic (request and so on)
 
 **!!! _IMPORTANT_ !!!**
 
-By default before each async call of APIProvider a store will be cleared. To prevent this behavior use:
+By default before each async call of APIProvider the store will be cleared. To prevent this behavior use:
 `preRequestDataMapper`
 
 #### constructor(type, handler, hooks)
@@ -314,7 +314,7 @@ Available `Branch` methods
 #### constructor(name, apiProviders, initialState)
 
 - name: string - branch name
-- apiProviders: APIProvider[] | APIProvider - array of APIProviders connected to branch 
+- apiProviders: APIProvider[] | APIProvider - array of APIProviders connected to branch
 - initialState: StoreBranch - initial state of branch
 
 #### .buildBranchReducers(namespace: string)
@@ -504,8 +504,8 @@ export interface ILineModel {
 }
 
 export interface ILineCollectionParams {
-  limit:number,
-  offset:number
+  limit: number;
+  offset: number;
 }
 
 export interface ILinesConnectedProps {
@@ -518,7 +518,10 @@ export interface ILinesConnectedProps {
   clearLineModel(): void;
 }
 
-const collectionApiProvider = new APIProvider(actionsTypes.get, (params: ILineCollectionParams): Promise<ILineModel[]> => axios.get(`/lines`));
+const collectionApiProvider = new APIProvider(
+  actionsTypes.get,
+  (params: ILineCollectionParams): Promise<ILineModel[]> => axios.get(`/lines`)
+);
 const modelApiProvider = [
   new APIProvider(actionsTypes.get, (id: number): Promise<ILineModel> => axios.get(`/lines/${id}`), {
     mapSuccess: (response, payload, branchState, fullState) => response.map(model => model),
