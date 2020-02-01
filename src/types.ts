@@ -21,7 +21,7 @@ export interface IActionsDispatcher {
   dispatchAction: IDispatchAction;
 }
 
-export interface IFullState<Branch extends StoreBranch<any, any> = StoreBranch<any, any>> {
+export interface IFullState<Branch extends StoreBranch<any, any, any> = StoreBranch<any, any, any>> {
   [key: string]: Branch;
 }
 
@@ -81,8 +81,8 @@ export interface IReducers {
   [key: string]: (state: IFullState, action: IAction<unknown>) => IFullState;
 }
 
-export interface IAction<Payload, Response = any> {
+export interface IAction<Payload, Response = any, Errors = any> {
   type: string;
   payload?: Payload;
-  cb?: (err?: Response, result?: Response) => void;
+  cb?: (err?: Errors, result?: Response) => void;
 }

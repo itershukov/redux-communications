@@ -288,10 +288,10 @@ By default before each async call of APIProvider a store will be cleared. To pre
 
   Available hooks:
 
-  - responseFormatter - occur just after after handler call
-  - postSuccessHooks - occur after success action is dispatched
-  - postFailHooks - occur after fail action is dispatched
-  - preRequestHook - occur before API call
+  - mapSuccess - occur just after after handler call
+  - onSuccesss - occur after success action is dispatched
+  - onFails - occur after fail action is dispatched
+  - onStart - occur before API call
   - clearParams (`boolean` flag) - if true clear StoreBranch params after success
   - mapParams - allow you to map params to be passed into API call
 
@@ -299,11 +299,11 @@ By default before each async call of APIProvider a store will be cleared. To pre
 
 ```typescript
 new APIProvider('get', () => axios.get('/test'), {
-  responseFormatter: (response, payload, branchState, fullState) => response.map(item => response.test)
+  mapSuccess: (response, payload, branchState, fullState) => response.map(item => response.test)
 });
 ```
 
-This `APIProvider` will generate a saga which sends GET /test and apply `responseFormatter` to response
+This `APIProvider` will generate a saga which sends GET /test and apply `mapSuccess` to response
 
 ### Branch
 
@@ -521,9 +521,9 @@ export interface ILinesConnectedProps {
 const collectionApiProvider = new APIProvider(actionsTypes.get, (params: ILineCollectionParams): Promise<ILineModel[]> => axios.get(`/lines`));
 const modelApiProvider = [
   new APIProvider(actionsTypes.get, (id: number): Promise<ILineModel> => axios.get(`/lines/${id}`), {
-    responseFormatter: (response, payload, branchState, fullState) => response.map(model => model),
-    postSuccessHook: (response, payload, branchState, fullState) => console.log('post success'),
-    postFailHook: (response, payload, branchState, fullState) => console.log('post fail')
+    mapSuccess: (response, payload, branchState, fullState) => response.map(model => model),
+    onSuccess: (response, payload, branchState, fullState) => console.log('post success'),
+    onFail: (response, payload, branchState, fullState) => console.log('post fail')
   }),
   new APIProvider(actionsTypes.update, (id: number, data: ILineModel): Promise<ILineModel> => axios.put(`/lines/${id}`, data))
 ];

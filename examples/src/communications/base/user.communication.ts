@@ -15,15 +15,15 @@ import { put } from 'redux-saga/effects';
 const namespace = 'user';
 
 const userCollectionConfig = {
-  responseFormatter: userResponseFormatter, // Reformat response from BE
+  mapSuccess: userResponseFormatter, // Reformat response from BE
   preRequestDataMapper: buildCollectionPreRequestDataMapper<IUserCollection, undefined>() // Prevent clear branch when request started
 };
 
 const userHooksConfig = {
-  postSuccessHook: reloadCollections // After success add item we need reload users and followers collection
+  onSuccess: reloadCollections // After success add item we need reload users and followers collection
 };
 
-const UserCollectionAPIProvider = new APIProvider(EActionsTypes.get, userTransport.getCollection, userCollectionConfig);
+const UserCollectionAPIProvider = new APIProvider(EActionsTypes.get, () => userTransport.getCollection(), userCollectionConfig);
 const UserFollowersAPIProvider = new APIProvider(
   EActionsTypes.get,
   () => userTransport.getCollection({ followers: true }),

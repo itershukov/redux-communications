@@ -16,5 +16,5 @@ export function buildCollectionResponseFormatter<
 }
 
 export function buildCollectionPreRequestDataMapper<ICollection, TPayload>() {
-  return (response: null, payload: TPayload, branchState: StoreBranch<ICollection | null, TPayload>) => branchState.data;
+  return (response: null, payload: TPayload | undefined, branchState: StoreBranch<ICollection | null, TPayload | undefined>) => branchState.data;
 }

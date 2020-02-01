@@ -1,9 +1,9 @@
 {
   "author": "itersh",
   "name": "@axmit/redux-communications",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "A toolset to simplify work with redux and saga libs",
-  "homepage": "https://github.com/itershukov/redux-communication",
+  "homepage": "https://github.com/itershukov/redux-communications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:itershukov/redux-communication.git"
+    "url": "git@github.com:itershukov/redux-communications.git"
   },
   "dependencies": {
     "react": "^16.12.0",

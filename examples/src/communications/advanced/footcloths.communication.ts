@@ -4,12 +4,13 @@ import {
   buildCommunication,
   CRUDStrategy
 } from '@axmit/redux-communications';
-import { footclothsTransport } from './footcloths.transport';
-import { IFootclothsConnectedProps } from './footcloths.types';
+import {footclothsTransport} from './footcloths.transport';
+import {IFootclothsConnectedProps} from './footcloths.types';
 
 const UserFollowersAPIProvider = new APIProvider(
   'activate',
-  footclothsTransport.additionalAction
+  footclothsTransport.additionalAction,
+  {throwOnFail: true}
 );
 
 const branches = [

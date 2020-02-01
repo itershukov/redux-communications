@@ -5,30 +5,31 @@ import { IAction, IFullState, INewable } from './types';
 import { StoreBranch } from './models/StoreBranch';
 import { APIProvider, IAPIProviderHooks } from './models/APIProvider';
 
-export function buildReducer<Data = object, Params = null, Errors = any>(
+export function buildReducer<Data = object, Params = any, Errors = any>(
   namespace: string,
   branchName: string,
   type: string,
   initialState: StoreBranch<Data, Params, Errors>,
-  providerHooks: IAPIProviderHooks<any, any> = {}
+  providerHooks: IAPIProviderHooks<Data, Params, Errors> = {}
 ) {
   const startActionType = getStartType(namespace, branchName, type),
     successActionType = getSuccessType(namespace, branchName, type),
     failActionType = getFailType(namespace, branchName, type);
 
   return {
-    [startActionType]: (state: IFullState, action: IAction<Params>) => {
+    [startActionType]: (state: IFullState<StoreBranch<Data, Params, Errors>>, action: IAction<Params>) => {
       let data = initialState.data; // state[branchName] && state[branchName].data;
+      let errors = initialState.errors; // state[branchName].errors;
       if (providerHooks.preRequestDataMapper) {
         data = providerHooks.preRequestDataMapper(null, action.payload, state[branchName], state);
       }
 
       return {
         ...state,
-        [branchName]: new StoreBranch(data, action.payload, initialState.errors, true)
+        [branchName]: new StoreBranch(data, action.payload, errors, true)
       };
     },
-    [successActionType]: (state: IFullState, action: IAction<Data>) => {
+    [successActionType]: (state: IFullState<StoreBranch<Data, Params, Errors>>, action: IAction<Data>) => {
       return {
         ...state,
         [branchName]: new StoreBranch(
@@ -37,7 +38,7 @@ export function buildReducer<Data = object, Params = null, Errors = any>(
         )
       };
     },
-    [failActionType]: (state: IFullState, action: IAction<Errors>) => {
+    [failActionType]: (state: IFullState<StoreBranch<Data, Params, Errors>>, action: IAction<Errors>) => {
       return {
         ...state,
         [branchName]: new StoreBranch(
@@ -50,49 +51,59 @@ export function buildReducer<Data = object, Params = null, Errors = any>(
   };
 }
 
-export function buildSaga(namespace: string, branchName: string, apiProvider: APIProvider) {
+export function buildSaga<Data, Params, Errors>(namespace: string, branchName: string, apiProvider: APIProvider<Data, Params, Errors>) {
   const saga = function*(): IterableIterator<unknown> {
     const { type, hooks, effectHandler = takeEvery } = apiProvider;
-    const { responseFormatter, postSuccessHook, postFailHook, preRequestHook, mapParams, hydrateTo } = hooks;
+    const { mapSuccess, mapFail, onSuccess, onFail, onStart, mapParams, hydrateTo } = hooks;
 
     const actionType = getStartType(namespace, branchName, type);
-    yield effectHandler(actionType, function*(action: IAction<unknown>) {
-      const fullState = yield select(state => state);
-      const branchState = (fullState && fullState[namespace] && fullState[namespace][branchName]) || null;
+    yield effectHandler(actionType, function*(action: IAction<Params>) {
+      const fullState: IFullState<StoreBranch<Data, Params, Errors>> = yield select(state => state);
+      const branchState: StoreBranch<Data, Params, Errors> | null = (fullState && fullState[namespace] && fullState[namespace][branchName]) || null;
+
+      if (!branchState){
+        throw new Error(`Branch ${branchName} in namespace ${namespace} not defined`);
+      }
 
       try {
-        if (preRequestHook) {
-          yield call(preRequestHook, null, action.payload, branchState, fullState);
+        if (onStart) {
+          yield call(onStart, action.payload, branchState, fullState);
         }
 
-        const params = mapParams ? mapParams(action.payload, branchState, fullState) : action.payload;
+        const params = mapParams ? yield call(mapParams, action.payload, branchState, fullState) : action.payload;
 
         const response = yield call(apiProvider.handler, params);
 
-        const formattedResponse = responseFormatter
-          ? yield call(responseFormatter, response, action.payload, branchState, fullState)
+        const formattedResponse = mapSuccess
+          ? yield call(mapSuccess, response, action.payload, branchState, fullState)
           : response;
 
         const hydratedResponse = hydrateTo ? hydrateResponse(formattedResponse, hydrateTo) : formattedResponse;
 
         yield put({ type: getSuccessType(namespace, branchName, type), payload: hydratedResponse });
 
-        if (postSuccessHook) {
-          yield call(postSuccessHook, response, action.payload, branchState, fullState);
+        if (onSuccess) {
+          yield call(onSuccess, hydratedResponse as Data, action.payload, branchState, fullState);
         }
 
         if (action.cb) {
-          action.cb(null, response);
+          action.cb(null, hydratedResponse as Data);
         }
-      } catch (error) {
-        yield put({ type: getFailType(namespace, branchName, type), payload: error });
+      } catch (e) {
+        const error = e || new Error('Something went wrong. Please check network connection.');
 
-        if (postFailHook) {
-          yield call(postFailHook, error, action.payload, branchState, fullState);
+        const formattedError: Errors = mapFail
+          ? yield call(mapFail, error, action.payload, branchState, fullState)
+          : error;
+
+        yield put({ type: getFailType(namespace, branchName, type), payload: formattedError });
+
+        if (onFail) {
+          yield call(onFail, formattedError, action.payload, branchState, fullState);
         }
 
         if (action.cb) {
-          action.cb(error || new Error('Something went wrong. Please check network connection.'));
+          action.cb(formattedError, null);
         }
       }
     });

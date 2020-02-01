@@ -1,11 +1,11 @@
-import { Dispatch } from 'redux';
+import {Dispatch} from 'redux';
 
-import { IBranchType } from '../types';
-import { APIProvider } from './APIProvider';
-import { buildActionCreator, buildReducer, buildSaga } from '../builders';
-import { getActionMethodName, getStartType } from '../helpers';
-import { EActionsTypes } from '../enums';
-import { StoreBranch } from './StoreBranch';
+import {IBranchType} from '../types';
+import {APIProvider} from './APIProvider';
+import {buildActionCreator, buildReducer, buildSaga} from '../builders';
+import {getActionMethodName, getStartType} from '../helpers';
+import {EActionsTypes} from '../enums';
+import {StoreBranch} from './StoreBranch';
 
 export class Branch<Data extends any = any, Params extends any = any, Errors extends any = any> implements IBranchType {
   public readonly name: string;
@@ -47,7 +47,20 @@ export class Branch<Data extends any = any, Params extends any = any, Errors ext
 
       accum[actionMethodLabel] = data =>
         new Promise((res, rej) => {
-          const actionCreator = buildActionCreator(startActionType, (e: unknown, r: unknown) => (e ? rej(e) : res(r)));
+          const actionCreator = buildActionCreator(startActionType,
+            (e: unknown, r: unknown) => {
+              if (e) {
+                if (provider.hooks.throwOnFail){
+                  rej(e)
+                } else {
+                  console.error(e);
+                  res(r);
+                }
+              } else {
+                res(r)
+              }
+            }
+          );
           const action = actionCreator(data);
           dispatch(action);
         });

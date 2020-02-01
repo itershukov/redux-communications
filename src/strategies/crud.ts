@@ -20,13 +20,13 @@ export class CRUDStrategy<
     const collectionAPIProviders: APIProvider[] = [];
 
     if (config.transport) {
-      function* postSuccessHook() {
+      function* onSuccess() {
         const params = yield select(state => state[config.namespace] && state[config.namespace].collection.params);
 
         yield put({ type: getStartType(config.namespace, 'collection', EActionsTypes.get), payload: params });
       }
 
-      const modelHooks = { postSuccessHook };
+      const modelHooks = { onSuccess };
 
       modelAPIProviders.push(
         new APIProvider(EActionsTypes.add, config.transport.add, modelHooks),
@@ -35,7 +35,7 @@ export class CRUDStrategy<
         new APIProvider(EActionsTypes.delete, config.transport.delete, modelHooks)
       );
 
-      const collectionHooks: IAPIProviderHooks<ICollection, ICollectionFilters> = {
+      const collectionHooks: IAPIProviderHooks<ICollection | null, ICollectionFilters, any> = {
         preRequestDataMapper: buildCollectionPreRequestDataMapper<ICollection, ICollectionFilters>()
       };
 
