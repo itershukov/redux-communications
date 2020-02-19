@@ -6,6 +6,10 @@ This package provides a toolset to simplify working with redux and saga libs.
 
 `npm i @axmit/redux-communications` or `yarn add @axmit/redux-communications`
 
+## Online DEMO
+
+https://codesandbox.io/s/misty-fast-pzjno
+
 ## Quick start
 
 To create a new communication you should do the following:
