@@ -35,6 +35,17 @@
   resolved "https://registry.yarnpkg.com/@axmit/client-models/-/client-models-1.1.7.tgz#232be3b6d06f878eca2f0a11086cf09056c1fe9a"
   integrity sha512-O8AdW7ah9PGH6Qeuh4qPKuo5rpKGlUuXmtEc9aej0QLy7n79XGctGIvVIrPJWx5WU9qpFz5Eqfg9p6RarkWWww==
 
+"@axmit/redux-communications@^6.1.2":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@axmit/redux-communications/-/redux-communications-6.1.2.tgz#7c23d74c0d45a7686f8a2a93843607100f2bf465"
+  integrity sha512-NtgDZwDAd4XNCGK1REFUGCly9s5lNkFK9EELNTu+RU/q5u+c7LMn8WkN2I20o4s7C0CvluV0SFHCVTnsME2xZA==
+  dependencies:
+    "@axmit/client-models" "^1.1.7"
+    react "^16.12.0"
+    react-redux "^7.1.3"
+    redux "^4.0.5"
+    redux-saga "^1.1.3"
+
 "@babel/code-frame@7.5.5", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.5.5":
   version "7.5.5"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.5.5.tgz#bc0782f6d69f7b7d49531219699b988f669a8f9d"

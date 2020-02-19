@@ -51,7 +51,11 @@ export function buildReducer<Data = object, Params = any, Errors = any>(
   };
 }
 
-export function buildSaga<Data, Params, Errors>(namespace: string, branchName: string, apiProvider: APIProvider<Data, Params, Errors>) {
+export function buildSaga<Data, Params, Errors>(
+  namespace: string,
+  branchName: string,
+  apiProvider: APIProvider<Data, Params, Errors>
+) {
   const saga = function*(): IterableIterator<unknown> {
     const { type, hooks, effectHandler = takeEvery } = apiProvider;
     const { mapSuccess, mapFail, onSuccess, onFail, onStart, mapParams, hydrateTo } = hooks;
@@ -59,9 +63,10 @@ export function buildSaga<Data, Params, Errors>(namespace: string, branchName: s
     const actionType = getStartType(namespace, branchName, type);
     yield effectHandler(actionType, function*(action: IAction<Params>) {
       const fullState: IFullState<StoreBranch<Data, Params, Errors>> = yield select(state => state);
-      const branchState: StoreBranch<Data, Params, Errors> | null = (fullState && fullState[namespace] && fullState[namespace][branchName]) || null;
+      const branchState: StoreBranch<Data, Params, Errors> | null =
+        (fullState && fullState[namespace] && fullState[namespace][branchName]) || null;
 
-      if (!branchState){
+      if (!branchState) {
         throw new Error(`Branch ${branchName} in namespace ${namespace} not defined`);
       }
 
@@ -83,18 +88,16 @@ export function buildSaga<Data, Params, Errors>(namespace: string, branchName: s
         yield put({ type: getSuccessType(namespace, branchName, type), payload: hydratedResponse });
 
         if (onSuccess) {
-          yield call(onSuccess, hydratedResponse as Data, action.payload, branchState, fullState);
+          yield call(onSuccess, hydratedResponse, action.payload, branchState, fullState);
         }
 
         if (action.cb) {
-          action.cb(null, hydratedResponse as Data);
+          action.cb(null, hydratedResponse);
         }
       } catch (e) {
         const error = e || new Error('Something went wrong. Please check network connection.');
 
-        const formattedError: Errors = mapFail
-          ? yield call(mapFail, error, action.payload, branchState, fullState)
-          : error;
+        const formattedError: Errors = mapFail ? yield call(mapFail, error, action.payload, branchState, fullState) : error;
 
         yield put({ type: getFailType(namespace, branchName, type), payload: formattedError });
 
