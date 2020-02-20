@@ -14,7 +14,7 @@ https://codesandbox.io/s/misty-fast-pzjno
 
 ### JavaScript
 
-https://codesandbox.io/s/misty-fast-pzjno
+https://codesandbox.io/s/wispy-silence-qpn0r
 
 ## Quick start
 
