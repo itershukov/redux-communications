@@ -8,39 +8,67 @@ This package provides a toolset to simplify working with redux and saga libs.
 
 ## Online DEMO
 
+### TypeScript
+
+https://codesandbox.io/s/misty-fast-pzjno
+
+### JavaScript
+
 https://codesandbox.io/s/misty-fast-pzjno
 
 ## Quick start
 
 To create a new communication you should do the following:
 
+### JavaScript
+
 ```typescript
-import { APIProvider, Branch, BaseStrategy, buildCommunication, StoreBranch, actionsTypes } from '@axmit/redux-communications';
+import { taskTransport } from './task.transport';
+import { CRUDStrategy, buildCommunication, StoreBranch } from '@axmit/redux-communications';
 
-export interface ILineModel {
+const namespace = 'task';
+
+const strategy = new CRUDStrategy({
+  namespace,
+  transport: taskTransport
+});
+
+export const taskCommunication = buildCommunication(strategy);
+```
+
+### TypeScript
+
+```typescript
+import { taskTransport } from './task.transport';
+import { CRUDStrategy, buildCommunication, StoreBranch } from '@axmit/redux-communications';
+
+export interface INewTask {
+  title: string;
+}
+
+export interface ITaskModel {
   id: number;
-  name: string;
+  title: string;
 }
 
-export interface ILineCollectionParams {
-  limit:number,
-  offset:number
+export interface ITaskConnectedProps {
+  taskModel: StoreBranch<ITaskModel>;
+  taskCollection: StoreBranch<ITaskModel[]>;
+  addTaskModel(params: INewTask): void;
+  getTaskModel(id: number): void;
+  updateTaskModel(params: { id: number; data: INewTask }): void;
+  deleteTaskModel(params: number): void;
+  getTaskCollection(): void;
 }
 
-const namespace = 'line';
-export interface ILinesConnectedProps {
- lineCollection: StoreBranch<ILineModel[]>;
- getLineCollection(params: ILineCollectionParams): Promise<ILineModel[]>; // Actions returns a promise
- clearLineCollection(): void;
-}
+const namespace = 'task';
 
-const apiProvider = new APIProvider(actionsTypes.get, Promise<ILineModel[]> => axios.get(`/lines`));
-const branches = [new Branch('collection', apiProvider, new StoreBranch([])]
+const strategy = new CRUDStrategy({
+  namespace,
+  transport: taskTransport
+});
 
-const strategy = new BaseStrategy({
- namespace, branches})
-
-const communicationLine = buildCommunication<ILinesConnectedProps>(strategy);
+export const taskCommunication = buildCommunication<ITaskConnectedProps>(strategy);
 ```
 
 After that you will have a communication that contains the base set of reducers, actions. You can easily setup it as usual.
