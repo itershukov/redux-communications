@@ -23,12 +23,8 @@ export const footclothsTransport = {
     return fakeResponse(Object.values(footclothss).sort((a, b) => (a.title > b.title ? 1 : -1)));
   },
   additionalAction: ({ param }) => {
-    return (
-      new Promise() <
-      string >
-      ((res, rej) => {
-        setTimeout(() => (Math.random() < 0.7 ? res('Success' + param) : rej('Error' + param)), 2000);
-      })
-    );
+    return new Promise((res, rej) => {
+      setTimeout(() => (Math.random() < 0.7 ? res('Success' + param) : rej('Error' + param)), 2000);
+    });
   }
 };

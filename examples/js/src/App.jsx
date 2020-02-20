@@ -7,7 +7,7 @@ import Header from './communications/simple/components/Header';
 import ContentLayout from './components/ContentLayout';
 import { Col, Row } from 'antd';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <div className="App">
       <Header />
