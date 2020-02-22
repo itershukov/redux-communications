@@ -1,6 +1,12 @@
 # Redux communications
 
 This package provides a toolset to simplify working with redux and saga libs.
+It allows to:
+
+- reduce a large amount of code by specifying only the values should to be changed instead of using templated code
+- unify and standardize the store structure
+- simplify store management
+- simplify async action management
 
 ## Installation
 
