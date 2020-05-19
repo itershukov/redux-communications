@@ -332,6 +332,7 @@ By default before each async call of APIProvider the store will be cleared. To p
   - onStart - occur before API call
   - clearParams (`boolean` flag) - if true clear StoreBranch params after success
   - mapParams - allow you to map params to be passed into API call
+  - throwOnFail - if true, error in transport will be thrown 
 
 #### Example
 
