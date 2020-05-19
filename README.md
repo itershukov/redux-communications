@@ -326,13 +326,16 @@ By default before each async call of APIProvider the store will be cleared. To p
 
   Available hooks:
 
-  - mapSuccess - occur just after after handler call
-  - onSuccesss - occur after success action is dispatched
-  - onFails - occur after fail action is dispatched
   - onStart - occur before API call
+  - onSuccesss - occur after success action is dispatched
+  - onFail - occur after fail action is dispatched
+  - mapSuccess - occur before success handler call
+  - mapFail - occur before fail handler call
   - clearParams (`boolean` flag) - if true clear StoreBranch params after success
   - mapParams - allow you to map params to be passed into API call
+  - preRequestDataMapper - allow you to map data that can be passed into store before API call
   - throwOnFail - if true, error in transport will be thrown 
+  - hydrateTo - allow hydrate response to an object
 
 #### Example
 
