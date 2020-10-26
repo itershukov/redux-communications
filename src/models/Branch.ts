@@ -53,7 +53,7 @@ export class Branch<Data extends any = any, Params extends any = any, Errors ext
                 if (provider.hooks.throwOnFail){
                   rej(e)
                 } else {
-                  console.error(e);
+                  console.log(e);
                   res(r);
                 }
               } else {
